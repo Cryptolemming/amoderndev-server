@@ -28,8 +28,6 @@ authRouter
           })
         }
 
-        console.log(dbUser)
-
         AuthService.comparePasswords(user.password, dbUser.password)
         .then(passwordsMatch => {
           if (!passwordsMatch) {
