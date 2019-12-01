@@ -48,13 +48,13 @@ VALUES
 
 INSERT INTO favorite_comments (user_id, comment_id)
 VALUES
-  (1, 85),
-  (2, 88),
-  (3, 109),
-  (1, 99),
-  (6, 123),
-  (4, 122),
-  (2, 94);
+  (1, 9),
+  (2, 8),
+  (3, 10),
+  (1, 4),
+  (6, 1),
+  (4, 2),
+  (2, 4);
 
 INSERT INTO bookmarks (user_id, post_id)
 VALUES
