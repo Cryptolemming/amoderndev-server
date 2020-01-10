@@ -4,13 +4,6 @@ const PostsService = {
       .select('*')
       .from('posts')
   },
-  getPostById(knex, id) {
-    return knex
-      .select('*')
-      .from('posts')
-      .where('id', id)
-      .first()
-  },
   insertPost(knex, post) {
     return knex
       .insert(post)
@@ -18,18 +11,20 @@ const PostsService = {
       .returning('*')
       .then(([post]) => post)
   },
-  updatePost(knex, post) {
-    return knex('posts')
-      .where({ id: post.id })
-      .update({
-        title: post.title,
-        content: post.content
-      })
+  getPostById(knex, postId) {
+    return knex
+      .from('posts')
+      .select('*')
+      .where('id', postId)
+      .first()
   },
-  removePost(knex, id) {
-    return knex('posts')
-      .where('id', id)
-      .delete()
+  updatePostById(knex, post) {
+    return knex
+      .from('posts')
+      .where({id: post.id})
+      .update(post)
+      .returning('*')
+      .then(([post]) => post)
   }
 }
 

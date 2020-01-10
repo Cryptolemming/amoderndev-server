@@ -28,7 +28,7 @@ postsRouter
     }
 
   })
-  .post([bodyParser, requireAuth], async (req, res, next) => {
+  .post(requireAuth, async (req, res, next) => {
     const knexInstance = req.app.get('db')
     const { title, content } = req.body;
 
@@ -48,19 +48,50 @@ postsRouter
 
     try {
       const newPost = await PostsService.insertPost(knexInstance, post)
-      console.log('post', newPost)
-      return res.json(serializePost(newPost))
+      return res.status(201).json(serializePost(newPost))
+    } catch(err) {
+      next(err)
+    }
+  })
+
+postsRouter
+  .route('/:post_id')
+  .all(async (req, res, next) => {
+    const knexInstance = req.app.get('db')
+    const { post_id: postId} = req.params;
+
+    try {
+      const post = await PostsService.getPostById(knexInstance, postId)
+      req.post = post;
+    } catch(err) {
+      next(err)
+    }
+
+    next()
+  })
+  .get(async (req, res, next) => {
+    try {
+      res.status(201).json(serializePost(req.post))
+    } catch(err) {
+      next(err)
+    }
+  })
+  .put(requireAuth, async (req, res, next) => {
+    const knexInstance = req.app.get('db')
+    const { title, content } = req.body;
+    const post = req.post;
+    console.log(post, title, content)
+    if (title) { post.title = title; }
+    if (content) { post.content = content; }
+
+    try {
+      const updatedPost = await PostsService.updatePostById(knexInstance, post)
+      return res.status(201).json(serializePost(updatedPost))
     } catch(err) {
       next(err)
     }
 
   })
-
-postsRouter
-  .route('/:post_id')
-  .all()
-  .get()
-  .put()
   .delete()
 
 module.exports = postsRouter;
