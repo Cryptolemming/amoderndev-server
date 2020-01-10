@@ -2,10 +2,9 @@ const express = require('express')
 const AuthService = require('./auth-service')
 
 const authRouter = express.Router()
-const bodyParser = express.json()
 
 authRouter
-  .post('/login', bodyParser, (req, res, next) => {
+  .post('/login', (req, res, next) => {
     const knex = req.app.get('db');
 
     const { username, password } = req.body;
@@ -27,7 +26,7 @@ authRouter
             error: `Username does not exist`
           })
         }
-
+        console.log(user, dbUser)
         AuthService.comparePasswords(user.password, dbUser.password)
         .then(passwordsMatch => {
           if (!passwordsMatch) {

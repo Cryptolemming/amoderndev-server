@@ -6,7 +6,7 @@ const AuthService = require('../auth/auth-service')
 const path = require('path')
 
 const usersRouter = express.Router()
-const bodyParser = express.json()
+
 
 const serializeUser = user => {
   const { id, username, email, date_created } = user;
@@ -15,7 +15,7 @@ const serializeUser = user => {
 
 usersRouter
   .route('/')
-  .post(bodyParser, (req, res, next) => {
+  .post((req, res, next) => {
     const knex = req.app.get('db')
 
     const { username, password, email } = req.body;
