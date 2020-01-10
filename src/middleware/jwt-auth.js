@@ -12,7 +12,7 @@ const requireAuth = (req, res, next) => {
     })
   }
 
-  bearerToken = authToken.slice(str.indexOf(' ') + 1)
+  bearerToken = authToken.slice(authToken.indexOf(' ') + 1)
 
   try {
     const payload = AuthService.verifyJWT(bearerToken)
@@ -24,12 +24,14 @@ const requireAuth = (req, res, next) => {
             error: `Unauthorized request`
           })
         }
-
+        console.log(user)
         req.user = user;
+        console.log(req.user)
         next();
       })
-      .catch(next(err))
+      .catch(err => next(err))
   } catch(error) {
+    console.log(error)
     return res.status(401).json({
       error: `Unauthorized request`
     })

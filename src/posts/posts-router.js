@@ -2,7 +2,7 @@ const express = require('express')
 const xss = require('xss')
 const path = require('path')
 const PostsService = require('./posts-service')
-
+const requireAuth = require('../middleware/jwt-auth')
 const postsRouter = express.Router()
 const bodyParser = express.json()
 
@@ -28,7 +28,33 @@ postsRouter
     }
 
   })
-  .post()
+  .post([bodyParser, requireAuth], async (req, res, next) => {
+    const knexInstance = req.app.get('db')
+    const { title, content } = req.body;
+
+    try {
+      for (const key of ['title', 'content']) {
+        if (!req.body[key]) {
+          throw `Missing ${key} in request body`
+        }
+      }
+    } catch(err) {
+      return res.status(400).json({
+        error: err
+      })
+    }
+
+    const post = { user_id: parseInt(req.user.id), title, content, }
+
+    try {
+      const newPost = await PostsService.insertPost(knexInstance, post)
+      console.log('post', newPost)
+      return res.json(serializePost(newPost))
+    } catch(err) {
+      next(err)
+    }
+
+  })
 
 postsRouter
   .route('/:post_id')
