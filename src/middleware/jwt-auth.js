@@ -5,35 +5,35 @@ const requireAuth = (req, res, next) => {
 
   const authToken = req.get('Authorization') || '';
 
+  let bearerToken;
   if (!authToken.toLowerCase().startsWith('bearer')) {
     return res.status(401).json({
-      error: `You are not logged in`
+      error: `Missing bearer token`
     })
   }
 
-  const bearerToken = authToken.slice(authToken.indexOf(' ') + 1)
+  bearerToken = authToken.slice(authToken.indexOf(' ') + 1)
 
   try {
     const payload = AuthService.verifyJWT(bearerToken)
-    console.log(payload)
+
     AuthService.getUserByUserName(knex, payload.sub)
       .then(user => {
-        console.log('user', user)
         if (!user) {
-          res.status(401).json({
-            error: `Unauthorized request`,
-            reason: `User not found`
+          return res.status(401).json({
+            error: `Unauthorized request`
           })
         }
-        console.log('here')
+        console.log(user)
         req.user = user;
+        console.log(req.user)
         next();
       })
       .catch(err => next(err))
   } catch(error) {
+    console.log(error)
     return res.status(401).json({
-      error: `Unauthorized request`,
-      reason: error
+      error: `Unauthorized request`
     })
   }
 }
