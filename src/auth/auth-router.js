@@ -26,20 +26,21 @@ authRouter
             error: `Username does not exist`
           })
         }
-        console.log(user, dbUser)
-        AuthService.comparePasswords(user.password, dbUser.password)
-        .then(passwordsMatch => {
-          if (!passwordsMatch) {
-            return res.status(400).json({
-              error: `Password incorrect`
-            })
-          }
 
-          res.send({
-            authToken: AuthService.createJWT(dbUser.username, {user_id: dbUser.id})
+        AuthService.comparePasswords(user.password, dbUser.password)
+          .then(passwordsMatch => {
+            console.log(passwordsMatch)
+            if (!passwordsMatch) {
+              return res.status(400).json({
+                error: `Password incorrect`
+              })
+            }
+
+            res.send({
+              authToken: AuthService.createJWT(dbUser.username, {user_id: dbUser.id})
+            })
           })
-        })
-        .catch(next)
+          .catch(next)
       })
       .catch(next)
   })

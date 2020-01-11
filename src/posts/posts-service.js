@@ -31,8 +31,7 @@ const PostsService = {
       .raw(
         `DELETE
         FROM posts
-        WHERE id = ${postId}
-        ON DELETE CASCADE`
+        WHERE id = ${postId}`
       );
   }
 }
