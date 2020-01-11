@@ -7,6 +7,7 @@ const { NODE_ENV } = require('./config')
 const authRouter = require('./auth/auth-router')
 const usersRouter = require('./users/users-router')
 const postsRouter = require('./posts/posts-router')
+const commentsRouter = require('./comments/comments-router')
 
 const app = express()
 const bodyParser = express.json()
@@ -23,6 +24,7 @@ app.use(bodyParser)
 app.use('/auth', authRouter)
 app.use('/users', usersRouter)
 app.use('/api/posts', postsRouter)
+app.use('/api/comments', commentsRouter)
 
 app.get("/", (req, res) => {
   res.send("A Modern Dev API");

@@ -4,7 +4,6 @@ const { JWT_SECRET, JWT_EXPIRY } = require('../config')
 
 const AuthService = {
   getUserByUserName(knex, username) {
-    console.log('username', username)
     return knex.from('users').select('*').where('username', username).first()
   },
   comparePasswords(password, hash) {
