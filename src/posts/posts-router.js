@@ -62,6 +62,11 @@ postsRouter
 
     try {
       const post = await PostsService.getPostById(knexInstance, postId)
+      if (!post) {
+        return res.status(404).json({
+          error: `Post does not exist`
+        })
+      }
       req.post = post;
     } catch(err) {
       next(err)
@@ -80,7 +85,7 @@ postsRouter
     const knexInstance = req.app.get('db')
     const { title, content } = req.body;
     const post = req.post;
-    console.log(post, title, content)
+
     if (title) { post.title = title; }
     if (content) { post.content = content; }
 
@@ -92,6 +97,16 @@ postsRouter
     }
 
   })
-  .delete()
+  .delete(requireAuth, async (req, res, next) => {
+    const knexInstance = req.app.get('db')
+    const post = req.post;
+
+    try {
+      await PostsService.deletePostById(knexInstance, post.id)
+      res.status(204).end()
+    } catch(err) {
+      next(err)
+    }
+  })
 
 module.exports = postsRouter;

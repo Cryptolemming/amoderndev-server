@@ -25,6 +25,15 @@ const PostsService = {
       .update(post)
       .returning('*')
       .then(([post]) => post)
+  },
+  deletePostById(knex, postId) {
+    return knex
+      .raw(
+        `DELETE
+        FROM posts
+        WHERE id = ${postId}
+        ON DELETE CASCADE`
+      );
   }
 }
 
