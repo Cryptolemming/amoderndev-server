@@ -65,3 +65,29 @@ VALUES
   (6, 4),
   (4, 3),
   (2, 5);
+
+  INSERT INTO following (user_id, follow)
+  VALUES
+  (1, 3),
+  (1, 2),
+  (2, 3),
+  (3, 2),
+  (4, 2);
+
+  INSERT INTO topics (title)
+  VALUES
+  ('web development'),
+  ('javascript'),
+  ('data science'),
+  ('programming'),
+  ('science'),
+  ('focus'),
+  ('health');
+
+  INSERT INTO post_topics (topic_id, post_id)
+  VALUES
+  (1, 3),
+  (1, 2),
+  (2, 3),
+  (3, 2),
+  (4, 1);
