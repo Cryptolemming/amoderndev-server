@@ -8,6 +8,7 @@ const authRouter = require('./auth/auth-router')
 const usersRouter = require('./users/users-router')
 const postsRouter = require('./posts/posts-router')
 const commentsRouter = require('./comments/comments-router')
+const followingRouter = require('./following/following-router')
 
 const app = express()
 const bodyParser = express.json()
@@ -25,6 +26,7 @@ app.use('/auth', authRouter)
 app.use('/users', usersRouter)
 app.use('/api/posts', postsRouter)
 app.use('/api/comments', commentsRouter)
+app.use('/api/following', followingRouter)
 
 app.get("/", (req, res) => {
   res.send("A Modern Dev API");

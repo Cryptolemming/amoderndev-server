@@ -15,6 +15,12 @@ const UsersService = {
       .where('id', id)
       .first()
   },
+  getUserByUsername(knex, userName) {
+    return knex
+      .from('users')
+      .where('username', userName)
+      .first()
+  },
   hashPassword(password) {
     return bcrypt.hash(password, 12)
   }
