@@ -22,7 +22,7 @@ followingRouter
 
     try {
       const user = req.user;
-      const result = await FollowingService.getAllFollowing(knexInstance, user.id)
+      const result = await FollowingService.getAllFollowingById(knexInstance, user.id)
         .reduce((acc, follow_datum) => {
           if (follow_datum.user_id === user.id) {
             acc['following'] += 1;
@@ -38,14 +38,14 @@ followingRouter
   })
 
 followingRouter
-  // authorization for detailed following info
+  // authorization for detailed following info of logged in user
   .route('/')
   .get(requireAuth, async (req, res, next) => {
     const knexInstance = req.app.get('db')
     const userId = req.user.id;
 
     try {
-      const result = await FollowingService.getAllFollowing(knexInstance, user.id)
+      const result = await FollowingService.getFollowingById(knexInstance, userId)
       return res.status(201).json(result)
     } catch(err) {
       next(err)
