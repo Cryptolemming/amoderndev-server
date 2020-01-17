@@ -22,16 +22,12 @@ followingRouter
 
     try {
       const user = req.user;
-      const result = await FollowingService.getAllFollowingById(knexInstance, user.id)
-        .reduce((acc, follow_datum) => {
-          if (follow_datum.user_id === user.id) {
-            acc['following'] += 1;
-          } else {
-            acc['followers'] += 1;
-          }
-        }, { 'following': 0, 'followers': 0})
-
-      return res.status(201).json(result)
+      const { following_count } = await FollowingService.getFollowingCountsById(knexInstance, user.id)
+      const { follower_count } = await FollowingService.getFollowerCountsById(knexInstance, user.id)
+      return res.status(201).json({
+        following_count,
+        follower_count
+      })
     } catch(err) {
       next(err)
     }
@@ -46,7 +42,7 @@ followingRouter
 
     try {
       const result = await FollowingService.getFollowingById(knexInstance, userId)
-      return res.status(201).json(result)
+      return res.status(201).json({fields: result.fields, rows: result.rows})
     } catch(err) {
       next(err)
     }

@@ -1,24 +1,32 @@
 const FollowingService = {
-  getAllFollowingById(knex, userId) {
+  getFollowingCountsById(knex, userId) {
     return knex
-      .select('*')
+      .count('*', { as: 'following_count' })
       .from('following')
       .where('user_id', userId)
-      .orWhere('follow', userId)
+      .first()
   },
-  getFollowingById(knex, userId) {
+  getFollowerCountsById(knex, userId) {
     return knex
-      .raw(`SELECT
-        f.follow as following_id,
-        u.username as following_username
+      .count('*', { as: 'follower_count' })
+      .from('following')
+      .where('follow', userId)
+      .first()
+  },
+  getAllFollowingDataById(knex, userId) {
+    return knex
+      .raw(`
+        SELECT
+          f.follow as following_id,
+          u.username as following_username
         FROM
-        following f
+          following f
         JOIN
-        users u
+          users u
         ON
-        f.follow = u.id
+          f.follow = u.id
         WHERE
-        f.user_id = ${userId};`
+          f.user_id = ${userId}`
       )
   },
   insertFollowById(knex, newFollow) {
