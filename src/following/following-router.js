@@ -41,8 +41,20 @@ followingRouter
     const userId = req.user.id;
 
     try {
-      const result = await FollowingService.getFollowingById(knexInstance, userId)
-      return res.status(201).json({fields: result.fields, rows: result.rows})
+      const followingData = await FollowingService.getFollowingDataById(knexInstance, userId)
+      const followerData = await FollowingService.getFollowerDataById(knexInstance, userId)
+
+      const result = [followingData, followerData].reduce((acc, datum, idx) => {
+        if (idx === 0) {
+          acc['following'] = datum['rows'].map(following => { return { id: following.id, username: following.username }})
+        } else {
+          acc['followers'] = datum['rows'].map(follower => { return { id: follower.id, username: follower.username }})
+        }
+
+        return acc;
+      }, {})
+
+      return res.status(201).json(result)
     } catch(err) {
       next(err)
     }

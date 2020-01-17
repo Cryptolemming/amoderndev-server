@@ -13,12 +13,28 @@ const FollowingService = {
       .where('follow', userId)
       .first()
   },
-  getAllFollowingDataById(knex, userId) {
+  getFollowingDataById(knex, userId) {
     return knex
       .raw(`
         SELECT
-          f.follow as following_id,
-          u.username as following_username
+          f.follow as id,
+          u.username as username
+        FROM
+          following f
+        JOIN
+          users u
+        ON
+          f.user_id = u.id
+        WHERE
+          f.user_id = ${userId}`
+      )
+  },
+  getFollowerDataById(knex, userId) {
+    return knex
+      .raw(`
+        SELECT
+          f.user_id as id,
+          u.username as username
         FROM
           following f
         JOIN
@@ -26,8 +42,8 @@ const FollowingService = {
         ON
           f.follow = u.id
         WHERE
-          f.user_id = ${userId}`
-      )
+          f.follow = ${userId}`
+    )
   },
   insertFollowById(knex, newFollow) {
     return knex
