@@ -57,6 +57,26 @@ postsRouter
 
 postsRouter
   .route('/:post_id')
+  .get(async (req, res, next) => {
+    const knexInstance = req.app.get('db')
+    const { post_id: postId} = req.params;
+
+    try {
+      const post = await PostsService.getPostById(knexInstance, postId)
+      if (!post) {
+        return res.status(404).json({
+          error: `Post does not exist`
+        })
+      }
+
+      return res.status(201).json(serializePost(post))
+    } catch(err) {
+      next(err)
+    }
+  })
+
+postsRouter
+  .route('/:post_id')
   .all(async (req, res, next) => {
     const knexInstance = req.app.get('db')
     const { post_id: postId} = req.params;
@@ -81,13 +101,6 @@ postsRouter
     }
 
     next()
-  })
-  .get(async (req, res, next) => {
-    try {
-      res.status(201).json(serializePost(req.post))
-    } catch(err) {
-      next(err)
-    }
   })
   .put(requireAuth, async (req, res, next) => {
     const knexInstance = req.app.get('db')
@@ -121,11 +134,45 @@ postsRouter
   // add and remove topics from a post
   .route('/:post_id/topics/:topic_id')
   .all(requireAuth, async (req, res, next) => {
+    const knexInstance = req.app.get('db')
+    const { id: userId } = req.user;
+    const { post_id, topic_id } = req.params;
+    // validate user owns post
+    try {
+      const post = await PostsService.getPostById(knexInstance, post_id)
+      if (post.user_id !== userId) {
+        return res.status(404).json({
+          error: `User not owner of this post`
+        })
+      }
+    } catch(err) {
+      next(err)
+    }
 
+    req.postTopic = { post_id, topic_id };
+    next()
   })
   .post(async (req, res, next) => {
+    const knexInstance = req.app.get('db')
+
+    try {
+        const postTopic = await TopicsService.insertPostTopic(knexInstance, req.postTopic)
+        return res.status(201).json(postTopic)
+    } catch(err) {
+      next(err)
+    }
 
   })
-  .delete()
+  .delete(async (req, res, next) => {
+    const knexInstance = req.app.get('db')
+
+    try {
+      TopicsService.deletePostTopic(knexInstance, req.postTopic)
+      return res.status(204).end()
+    } catch(err) {
+      next(err)
+    }
+
+  })
 
 module.exports = postsRouter;
