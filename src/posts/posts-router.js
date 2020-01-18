@@ -2,6 +2,7 @@ const express = require('express')
 const xss = require('xss')
 const path = require('path')
 const PostsService = require('./posts-service')
+const TopicsService = require('../topics/topics-service')
 const requireAuth = require('../middleware/jwt-auth')
 const postsRouter = express.Router()
 const bodyParser = express.json()
@@ -67,6 +68,13 @@ postsRouter
           error: `Post does not exist`
         })
       }
+
+      if (req.user.id !== post.user_id) {
+        return res.status(404).json({
+          error: `User not the owner of this post`
+        })
+      }
+
       req.post = post;
     } catch(err) {
       next(err)
@@ -108,5 +116,16 @@ postsRouter
       next(err)
     }
   })
+
+postsRouter
+  // add and remove topics from a post
+  .route('/:post_id/topics/:topic_id')
+  .all(requireAuth, async (req, res, next) => {
+
+  })
+  .post(async (req, res, next) => {
+
+  })
+  .delete()
 
 module.exports = postsRouter;

@@ -22,11 +22,11 @@ followingRouter
 
     try {
       const user = req.user;
-      const { following_count } = await FollowingService.getFollowingCountsById(knexInstance, user.id)
-      const { follower_count } = await FollowingService.getFollowerCountsById(knexInstance, user.id)
+      const { following } = await FollowingService.getFollowingCountsById(knexInstance, user.id)
+      const { followers } = await FollowingService.getFollowerCountsById(knexInstance, user.id)
       return res.status(201).json({
-        following_count,
-        follower_count
+        following,
+        followers
       })
     } catch(err) {
       next(err)

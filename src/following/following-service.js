@@ -1,14 +1,14 @@
 const FollowingService = {
   getFollowingCountsById(knex, userId) {
     return knex
-      .count('*', { as: 'following_count' })
+      .count('*', { as: 'following' })
       .from('following')
       .where('user_id', userId)
       .first()
   },
   getFollowerCountsById(knex, userId) {
     return knex
-      .count('*', { as: 'follower_count' })
+      .count('*', { as: 'followers' })
       .from('following')
       .where('follow', userId)
       .first()
