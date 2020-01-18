@@ -7,7 +7,6 @@ const TopicsService = {
       .then(([postTopic]) => postTopic)
   },
   deletePostTopic(knex, removePostTopic) {
-    console.log(removePostTopic)
     return knex
       .raw(
         `DELETE
