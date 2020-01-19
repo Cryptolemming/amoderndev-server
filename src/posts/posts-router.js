@@ -9,11 +9,12 @@ const bodyParser = express.json()
 
 const serializePost = post => ({
   id: post.id,
-  user: post.user_id,
+  user: post.username,
   title: xss(post.title),
   content: xss(post.content),
   comment_count: post.comment_count,
-  date_created: post.date_created
+  date_created: post.date_created,
+  topics: post.topics
 })
 
 postsRouter
@@ -23,7 +24,7 @@ postsRouter
 
     try {
       const posts = await PostsService.getAllPosts(knexInstance)
-      res.json(posts.map(post => serializePost(post)))
+      res.json(posts.rows.map(post => serializePost(post)))
     } catch(err) {
       next(err)
     }

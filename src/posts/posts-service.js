@@ -1,8 +1,14 @@
 const PostsService = {
   getAllPosts(knex) {
     return knex
-      .select('*')
-      .from('posts')
+      .raw(
+        `SELECT p.id, p.date_created, u.username, p.title, p.content, p.comment_count, array_agg(t.title) AS topics
+         FROM posts p
+         LEFT JOIN users u on p.user_id = u.id
+         LEFT JOIN post_topics pt on p.id = pt.post_id
+         LEFT JOIN topics t on pt.topic_id = t.id
+         GROUP BY p.id, u.username`
+       )
   },
   insertPost(knex, post) {
     return knex
