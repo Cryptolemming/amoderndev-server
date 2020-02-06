@@ -1,4 +1,9 @@
 const TopicsService = {
+  getTopics(knex) {
+    return knex
+      .select('*')
+      .from('topics')
+  },
   insertPostTopic(knex, newPostTopic) {
     return knex
       .insert(newPostTopic)

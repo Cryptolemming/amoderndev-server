@@ -3,10 +3,8 @@ const UsersService = require('./users-service')
 const { requireAuth } = require('../middleware/jwt-auth')
 const css = require('xss')
 const AuthService = require('../auth/auth-service')
-const path = require('path')
 
 const usersRouter = express.Router()
-
 
 const serializeUser = user => {
   const { id, username, email, date_created } = user;
@@ -48,7 +46,6 @@ usersRouter
           .then(user => {
             return res
               .status(201)
-              .location(path.posix.join(req.originalUrl, `/${user.id}`))
               .json(serializeUser(user))
           })
           .catch(next)

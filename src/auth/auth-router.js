@@ -1,7 +1,12 @@
 const express = require('express')
 const AuthService = require('./auth-service')
-
+const path = require('path')
 const authRouter = express.Router()
+
+const serializeUser = user => {
+  const { id, username, email, date_created } = user;
+  return { id, username, email, date_created };
+}
 
 authRouter
   .post('/login', (req, res, next) => {
@@ -36,8 +41,11 @@ authRouter
               })
             }
 
-            res.send({
-              authToken: AuthService.createJWT(dbUser.username, {user_id: dbUser.id})
+            res
+              .status(201)
+              .json({
+                user: serializeUser(dbUser),
+                authToken: AuthService.createJWT(dbUser.username, {user_id: dbUser.id})
             })
           })
           .catch(next)

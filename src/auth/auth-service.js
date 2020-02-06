@@ -20,12 +20,6 @@ const AuthService = {
     return jwt.verify(token, JWT_SECRET, {
       algorithms: ['HS256'],
     })
-  },
-  parseBasicToken(token) {
-    return Buffer
-      .from(token, 'base64')
-      .toString()
-      .split(':')
   }
 }
 
