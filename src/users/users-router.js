@@ -1,6 +1,6 @@
 const express = require('express')
 const UsersService = require('./users-service')
-const { requireAuth } = require('../middleware/jwt-auth')
+const requireAuth = require('../middleware/jwt-auth')
 const css = require('xss')
 const AuthService = require('../auth/auth-service')
 
@@ -13,6 +13,10 @@ const serializeUser = user => {
 
 usersRouter
   .route('/')
+  // get user from token
+  .get(requireAuth, (req, res, next) => {
+      return res.status(201).json(serializeUser(req.user))
+  })
   .post((req, res, next) => {
     const knex = req.app.get('db')
 
