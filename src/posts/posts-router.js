@@ -78,7 +78,7 @@ postsRouter
 
 postsRouter
   .route('/:post_id')
-  .all(async (req, res, next) => {
+  .all(requireAuth, async (req, res, next) => {
     const knexInstance = req.app.get('db')
     const { post_id: postId} = req.params;
 
