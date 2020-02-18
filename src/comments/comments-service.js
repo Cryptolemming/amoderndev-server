@@ -1,9 +1,21 @@
 const CommentsService = {
   getAllComments(knex, postId) {
     return knex
-      .select('*')
-      .from('comments')
-      .where('post_id', postId)
+      .raw(`
+        SELECT *, u.username
+        FROM comments c
+        LEFT JOIN users u on c.user_id = u.id
+        WHERE c.post_id = ${postId}
+      `)
+  },
+  getCommentsByUser(knex, userId) {
+    return knex
+      .raw(`
+        SELECT *, u.username
+        FROM comments c
+        LEFT JOIN users u on c.user_id = u.id
+        WHERE c.user_id = ${userId}
+      `)
   },
   insertComment(knex, comment) {
     return knex

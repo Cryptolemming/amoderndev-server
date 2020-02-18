@@ -21,17 +21,17 @@ VALUES
 
 INSERT INTO comments (user_id, content, post_id)
 VALUES
-  (1, 'I am a comment', 4),
+  (10, 'I am a comment', 4),
   (2, 'I am a comment', 6),
-  (3, 'I am a comment', 1),
-  (1, 'I am a comment', 6),
+  (3, 'I am a comment', 10),
+  (10, 'I am a comment', 6),
   (6, 'I am a comment', 4),
   (4, 'I am a comment', 3),
   (10, 'I am a comment', 5),
   (10, 'I am a comment', 4),
   (2, 'I am a comment', 6),
   (3, 'I am a comment', 10),
-  (1, 'I am a comment', 6),
+  (10, 'I am a comment', 6),
   (6, 'I am a comment', 10),
   (4, 'I am a comment', 3),
   (2, 'I am a comment', 5);

@@ -10,6 +10,7 @@ const commentsRouter = express.Router()
 const serializeComment = comment => ({
   id: comment.id,
   user: comment.user_id,
+  username: comment.username,
   post: comment.post_id,
   content: xss(comment.content),
   date_created: comment.date_created
@@ -39,7 +40,7 @@ commentsRouter
 
     try {
       const comments = await CommentsService.getAllComments(knexInstance, postId);
-      res.status(201).json(comments.map(comment => serializeComment(comment)))
+      res.status(201).json(comments.rows.map(comment => serializeComment(comment)))
     } catch(err) {
       next(err);
     }
@@ -67,6 +68,25 @@ commentsRouter
     try {
       await CommentsService.deleteCommentById(knexInstance, commentId, postId);
       res.status(204).end();
+    } catch(err) {
+      next(err)
+    }
+  })
+
+commentsRouter
+  .route('/user/:user_id')
+  .get(async (req, res, next) => {
+    const knexInstance = req.app.get('db')
+    const { user_id: userId } = req.params;
+
+    try {
+      const comments = await CommentsService.getCommentsByUser(knexInstance, userId);
+      if (!comments) {
+        return res.status(404).json({
+          error: `Comments not found for this user`
+        })
+      }
+      res.status(201).json(comments.rows.map(comment => serializeComment(comment)))
     } catch(err) {
       next(err)
     }
