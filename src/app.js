@@ -10,6 +10,7 @@ const postsRouter = require('./posts/posts-router')
 const commentsRouter = require('./comments/comments-router')
 const followingRouter = require('./following/following-router')
 const topicsRouter = require('./topics/topics-router')
+const favouritesRouter = require('./favourites/favourites-router')
 
 const app = express()
 const bodyParser = express.json()
@@ -29,6 +30,7 @@ app.use('/api/posts', postsRouter)
 app.use('/api/comments', commentsRouter)
 app.use('/api/following', followingRouter)
 app.use('/api/topics', topicsRouter)
+app.use('/api/favourites', favouritesRouter)
 
 app.get("/", (req, res) => {
   res.send("A Modern Dev API");
