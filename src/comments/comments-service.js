@@ -1,5 +1,10 @@
 const CommentsService = {
-  getAllComments(knex, postId) {
+  getAllComments(knex) {
+    return knex
+      .select('*')
+      .from('comments')
+  },
+  getAllCommentsByPost(knex, postId) {
     return knex
       .raw(`
         SELECT *, u.username

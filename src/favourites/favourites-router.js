@@ -4,13 +4,9 @@ const FavouritesService = require('./favourites-service')
 
 const favouritesRouter = express.Router()
 
-const serializeFavouritePost = ({post_id}) => ({
-  id: post_id
-})
+const serializeFavouritePost = (({post_id}) => post_id)
 
-const serializeFavouriteComment = ({comment_id}) => ({
-  id: comment_id
-})
+const serializeFavouriteComment = (({comment_id}) => comment_id)
 
 favouritesRouter
   .route('/')
