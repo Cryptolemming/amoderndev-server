@@ -29,7 +29,7 @@ commentsRouter
           error: `Comments not found for thi suser`
         })
       }
-      res.status(201).json(comments.map(comment => serializeComment(comment)))
+      res.status(201).json(comments.rows.map(comment => serializeComment(comment)))
     } catch(err) {
       next(err)
     }
