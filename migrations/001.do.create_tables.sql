@@ -11,7 +11,6 @@ CREATE TABLE posts (
   user_id INTEGER REFERENCES users(id) ON DELETE CASCADE NOT NULL,
   title TEXT NOT NULL,
   content TEXT NOT NULL,
-  comment_count SMALLINT DEFAULT 0 NOT NULL,
   date_created TIMESTAMP DEFAULT now() NOT NULL
 );
 

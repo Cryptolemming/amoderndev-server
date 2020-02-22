@@ -12,7 +12,7 @@ const serializePost = post => ({
   user: post.username,
   title: xss(post.title),
   content: xss(post.content),
-  comment_count: post.comment_count,
+  comments: post.comments,
   date_created: post.date_created,
   topics: post.topics
 })
