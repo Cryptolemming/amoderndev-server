@@ -3,7 +3,7 @@ const CommentsService = {
     return knex
       .raw(`
         SELECT c.id, c.user_id, u.username, c.content, c.post_id, c.date_created,
-               array_agg(DISTINCT f.comment_id) AS favourites
+               array_agg(DISTINCT f.user_id) AS favourites_users
         FROM comments c
         LEFT JOIN users u on c.user_id = u.id
         LEFT JOIN favorite_comments f on f.comment_id = c.id
@@ -26,7 +26,7 @@ const CommentsService = {
     return knex
       .raw(`
         SELECT c.id, c.user_id, u.username, c.content, c.post_id, c.date_created,
-               array_agg(DISTINCT f.comment_id) AS favourites
+               array_agg(DISTINCT f.user_id) AS favourites_users
         FROM comments c
         LEFT JOIN users u on c.user_id = u.id
         LEFT JOIN favorite_comments f on f.comment_id = c.id

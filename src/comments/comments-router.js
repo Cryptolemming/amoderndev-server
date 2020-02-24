@@ -13,7 +13,7 @@ const serializeComment = comment => ({
   username: comment.username,
   post: comment.post_id,
   content: xss(comment.content),
-  favourites: comment.favourites,
+  favouritesUsers: comment.favourites_users,
   date_created: comment.date_created
 })
 
