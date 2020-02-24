@@ -4,7 +4,6 @@ const PostsService = {
       .raw(
         `SELECT distinct p.id, p.date_created, u.username, p.title, p.content,
                 array_agg(DISTINCT c.id) AS comments, array_agg(DISTINCT t.title) AS topics,
-                array_agg(DISTINCT fp.post_id) AS favourites,
                 array_agg(DISTINCT fp.user_id) AS favourites_users,
                 array_agg(DISTINCT c.user_id) AS comments_users
          FROM posts p
