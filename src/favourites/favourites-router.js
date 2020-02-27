@@ -10,7 +10,8 @@ const serializeFavouriteComment = (({comment_id}) => comment_id)
 
 favouritesRouter
   .route('/')
-  .get(requireAuth, async (req, res, next) => {
+  .all(requireAuth)
+  .get(async (req, res, next) => {
     const knexInstance = req.app.get('db')
     const { user } = req;
 
@@ -27,6 +28,90 @@ favouritesRouter
         comments: favouriteComments ? favouriteComments.map(comment => serializeFavouriteComment(comment)) : []
       }
       res.status(201).json(favouritesByUser)
+    } catch(err) {
+      next(err)
+    }
+  })
+
+favouritesRouter
+  .route('/post')
+  .all(requireAuth)
+  .post(async (req, res, next) => {
+    const knexInstance = req.app.get('db')
+    const { user } = req;
+    const { post_id } = req.body;
+
+    const newFavourite = { user_id: user.id, post_id }
+
+    try {
+      const favouritePost = await FavouritesService.addFavouritePost(knexInstance, newFavourite)
+      if (!newFavourite) {
+        return res.status(404).json({
+          error: `Favourite not added`
+        })
+      }
+      res.status(201).json(favouritePost)
+    } catch(err) {
+      next(err)
+    }
+  })
+  .delete(async (req, res, next) => {
+    const knexInstance = req.app.get('db')
+    const { user } = req;
+    const { post_id } = req.body;
+
+    const favouriteDelete = { user_id: user.id, post_id }
+
+    try {
+      const deletedFavourite = await FavouritesService.deleteFavouritePost(knexInstance, favouriteDelete)
+      if (!deletedFavourite) {
+        return res.status(404).json({
+          error: `Favourite not deleted`
+        })
+      }
+      return res.status(204).end()
+    } catch(err) {
+      next(err)
+    }
+  })
+
+favouritesRouter
+  .route('/comment')
+  .all(requireAuth)
+  .post(async (req, res, next) => {
+    const knexInstance = req.app.get('db')
+    const { user } = req;
+    const { comment_id } = req.body;
+
+    const newFavourite = { user_id: user.id, comment_id }
+
+    try {
+      const favouriteComment = await FavouritesService.addFavouriteComment(knexInstance, newFavourite)
+      if (!newFavourite) {
+        return res.status(404).json({
+          error: `Favourite not added`
+        })
+      }
+      res.status(201).json(favouriteComment)
+    } catch(err) {
+      next(err)
+    }
+  })
+  .delete(async (req, res, next) => {
+    const knexInstance = req.app.get('db')
+    const { user } = req;
+    const { comment_id } = req.body;
+
+    const favouriteDelete = { user_id: user.id, comment_id }
+
+    try {
+      const deletedFavourite = await FavouritesService.deleteFavouriteComment(knexInstance, favouriteDelete)
+      if (!deletedFavourite) {
+        return res.status(404).json({
+          error: `Favourite not deleted`
+        })
+      }
+      res.status(204).end()
     } catch(err) {
       next(err)
     }
