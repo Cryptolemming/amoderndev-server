@@ -34,7 +34,7 @@ postsRouter
   })
   .post(requireAuth, async (req, res, next) => {
     const knexInstance = req.app.get('db')
-    const { title, content } = req.body;
+    const { title, topics, content } = req.body;
 
     try {
       for (const key of ['title', 'content']) {
@@ -48,10 +48,18 @@ postsRouter
       })
     }
 
-    const post = { user_id: parseInt(req.user.id), title, content, }
+    const post = { user_id: parseInt(req.user.id), title, content }
 
     try {
       const newPost = await PostsService.insertPost(knexInstance, post)
+      topics.forEach(async topic => {
+        const postTopic = { post_id: newPost.id, topic_id:  topic}
+        try {
+          const newPostTopic = await TopicsService.insertPostTopic(knexInstance, postTopic)
+        } catch(err) {
+          next(err)
+        }
+      })
       return res.status(201).json(serializePost(newPost))
     } catch(err) {
       next(err)
