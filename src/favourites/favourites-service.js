@@ -28,7 +28,7 @@ const FavouritesService = {
       .where('user_id', userId)
   },
   addFavouriteComment(knex, newFavourite) {
-    return knex
+      return knex
       .into('favorite_comments')
       .insert(newFavourite)
       .returning('*')

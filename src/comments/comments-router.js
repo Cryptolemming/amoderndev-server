@@ -102,7 +102,7 @@ commentsRouter
     const knexInstance = req.app.get('db')
     const { comment_id: commentId } = req.body;
     const { post_id: postId } = req.params;
-
+    console.log(commentId, postId)
     try {
       await CommentsService.deleteCommentById(knexInstance, commentId, postId);
       res.status(204).end();

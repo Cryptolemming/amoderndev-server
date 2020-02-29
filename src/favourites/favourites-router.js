@@ -42,7 +42,7 @@ favouritesRouter
     const { post_id } = req.body;
 
     const newFavourite = { user_id: user.id, post_id }
-
+    console.log(newFavourite)
     try {
       const favouritePost = await FavouritesService.addFavouritePost(knexInstance, newFavourite)
       if (!newFavourite) {
@@ -59,9 +59,9 @@ favouritesRouter
     const knexInstance = req.app.get('db')
     const { user } = req;
     const { post_id } = req.body;
-
+    console.log(req.body)
     const favouriteDelete = { user_id: user.id, post_id }
-
+    console.log(favouriteDelete)
     try {
       const deletedFavourite = await FavouritesService.deleteFavouritePost(knexInstance, favouriteDelete)
       if (!deletedFavourite) {

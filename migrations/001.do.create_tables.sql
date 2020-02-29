@@ -3,7 +3,7 @@ CREATE TABLE users (
   username TEXT NOT NULL,
   password VARCHAR(100) NOT NULL,
   email VARCHAR(320) NOT NULL,
-  date_created TIMESTAMP DEFAULT now() NOT NULL
+  date_created TIMESTAMPZ DEFAULT now() NOT NULL
 );
 
 CREATE TABLE posts (
@@ -11,7 +11,7 @@ CREATE TABLE posts (
   user_id INTEGER REFERENCES users(id) ON DELETE CASCADE NOT NULL,
   title TEXT NOT NULL,
   content TEXT NOT NULL,
-  date_created TIMESTAMP DEFAULT now() NOT NULL
+  date_created TIMESTAMPZ DEFAULT now() NOT NULL
 );
 
 CREATE TABLE comments (
@@ -19,7 +19,7 @@ CREATE TABLE comments (
   user_id INTEGER REFERENCES users(id) ON DELETE CASCADE NOT NULL,
   content VARCHAR(1000) NOT NULL,
   post_id INTEGER REFERENCES posts(id)  ON DELETE CASCADE NOT NULL,
-  date_created TIMESTAMP DEFAULT now() NOT NULL
+  date_created TIMESTAMPZ DEFAULT now() NOT NULL
 );
 
 CREATE TABLE favorite_posts (
