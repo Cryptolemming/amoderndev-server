@@ -49,6 +49,8 @@ postsRouter
     }
 
     const post = { user_id: parseInt(req.user.id), title, content }
+    const secureContent = xss(content)
+    console.log(secureContent)
 
     try {
       const newPost = await PostsService.insertPost(knexInstance, post)

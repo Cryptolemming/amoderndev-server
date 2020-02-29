@@ -3,6 +3,7 @@ const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
 const helmet = require('helmet')
+const csp = require('helmet-csp')
 const { NODE_ENV } = require('./config')
 const authRouter = require('./auth/auth-router')
 const usersRouter = require('./users/users-router')
@@ -13,7 +14,6 @@ const topicsRouter = require('./topics/topics-router')
 const favouritesRouter = require('./favourites/favourites-router')
 
 const app = express()
-const bodyParser = express.json()
 
 const morganOption = (NODE_ENV === 'production')
   ? 'tiny'
@@ -22,7 +22,16 @@ const morganOption = (NODE_ENV === 'production')
 app.use(morgan(morganOption))
 app.use(cors())
 app.use(helmet())
-app.use(bodyParser)
+app.use(csp({
+  directives: {
+    defaultSrc: ["'self'"],
+    styleSrc: ["'self'"],
+    scriptSrc: ["'self'"]
+  }
+}))
+// limit payload to battle DDOS attack
+// can also add express-rate-limit dependency
+app.use(express.json({ limit: '10kb' }))
 
 app.use('/auth', authRouter)
 app.use('/users', usersRouter)
