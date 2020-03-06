@@ -22,6 +22,7 @@ const morganOption = (NODE_ENV === 'production')
 app.use(morgan(morganOption))
 app.use(cors())
 app.use(helmet())
+// helmet content security policy
 app.use(csp({
   directives: {
     defaultSrc: ["'self'"],

@@ -49,8 +49,6 @@ postsRouter
     }
 
     const post = { user_id: parseInt(req.user.id), title, content }
-    const secureContent = xss(content)
-    console.log(secureContent)
 
     try {
       const newPost = await PostsService.insertPost(knexInstance, post)
@@ -62,7 +60,9 @@ postsRouter
           next(err)
         }
       })
-      return res.status(201).json(serializePost(newPost))
+
+      const successfulPost = await PostsService.getPostById(knexInstance, newPost.id)
+      return res.status(201).json(serializePost(successfulPost.rows[0]))
     } catch(err) {
       next(err)
     }
@@ -81,8 +81,8 @@ postsRouter
           error: `Post does not exist`
         })
       }
-
-      return res.status(201).json(serializePost(post))
+      console.log(post)
+      return res.status(201).json(serializePost(post.rows[0]))
     } catch(err) {
       next(err)
     }

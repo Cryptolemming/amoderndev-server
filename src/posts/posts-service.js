@@ -3,9 +3,10 @@ const PostsService = {
     return knex
       .raw(
         `SELECT distinct p.id, p.date_created, u.username, p.title, p.content,
-                array_agg(DISTINCT c.id) AS comments, array_agg(DISTINCT t.title) AS topics,
-                array_agg(DISTINCT fp.user_id) AS favourites_users,
-                array_agg(DISTINCT c.user_id) AS comments_users
+                array_remove(array_agg(DISTINCT c.id), null) AS comments,
+                array_remove(array_agg(DISTINCT t.title), null) AS topics,
+                array_remove(array_agg(DISTINCT fp.user_id), null) AS favourites_users,
+                array_remove(array_agg(DISTINCT c.user_id), null) AS comments_users
          FROM posts p
          LEFT JOIN users u on p.user_id = u.id
          LEFT JOIN post_topics pt on p.id = pt.post_id
@@ -24,10 +25,21 @@ const PostsService = {
   },
   getPostById(knex, postId) {
     return knex
-      .from('posts')
-      .select('*')
-      .where('id', postId)
-      .first()
+      .raw(
+        `SELECT distinct p.id, p.date_created, u.username, p.title, p.content,
+                array_remove(array_agg(DISTINCT c.id), null) AS comments,
+                array_remove(array_agg(DISTINCT t.title), null) AS topics,
+                array_remove(array_agg(DISTINCT fp.user_id), null) AS favourites_users,
+                array_remove(array_agg(DISTINCT c.user_id), null) AS comments_users
+         FROM posts p
+         LEFT JOIN users u on p.user_id = u.id
+         LEFT JOIN post_topics pt on p.id = pt.post_id
+         LEFT JOIN topics t on pt.topic_id = t.id
+         LEFT JOIN comments c on c.post_id = p.id
+         LEFT JOIN favorite_posts fp on fp.post_id = p.id
+         WHERE p.id = ${postId}
+         GROUP BY p.id, u.username`
+      )
   },
   updatePostById(knex, post) {
     return knex
